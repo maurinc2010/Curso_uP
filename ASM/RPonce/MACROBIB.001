@@ -1,0 +1,196 @@
+;*****************************************************************************
+; Nombre del programa:   MACROBIB.001
+; Fecha de creaci¢n  :   Junio 28 de 1993
+; Autor              :   J.A. Rojas Ponce
+; Objetivo           :   Nuestra biblioteca de macros, ampliada y documentada
+;*****************************************************************************
+
+
+;----------------------------------------------------------------------------
+; MACRO      : Borra_Pantalla
+; PROPOSITO  : Borrar la pantalla a trav‚s de un truco del video que consiste
+;              en cambiar de modo de video.
+; PARAMETROS : Ninguno
+; REGRESA    : Nada
+;----------------------------------------------------------------------------
+
+Borra_Pantalla  MACRO
+                Mov     AH, 0Fh    ; Obt‚n modo de video actual
+                Int     10h
+                Mov     AH, 0      ; Cambia al modo de video que se obtuvo
+                Int     10h
+                ENDM
+
+;----------------------------------------------------------------------------
+; MACRO      : Despliega_mens
+; PROPOSITO  : Despliega un mensaje al video
+; PARAMETROS : El mensaje a desplegar
+; REGRESA    : Nada
+;----------------------------------------------------------------------------
+
+Despliega_Mens  MACRO   Mensaje
+                Push    AX         ; Guarda registros a usar
+                Push    DX         ;  en la pila.
+                Mov     DX, OFFSET Mensaje  ; Direcci¢n del mensaje
+                Mov     AH, 09h    ; Deja que DOS haga el trabajo
+                INT     21h        ; Restaura registros originales
+                Pop     DX
+                Pop     AX
+                ENDM
+
+
+;----------------------------------------------------------------------------
+; MACRO      : Pon_Cursor
+; PROPOSITO  : Posiciona el cursor (de texto) en la FILA y COLUMNA determinada
+; PARAMETROS : Las coordenadas X (Fila) y Y (Columna) donde desea posicionar
+;              el cursor.
+; REGRESA    : Nada
+;----------------------------------------------------------------------------
+
+Pon_Cursor      MACRO   Fila, Columna
+                Push    AX         ; Guarda registros en la pila
+                Push    BX
+                Push    DX
+                Mov     AH, 02h    ; Posiciona el cursor en FILA, COLUMNA
+                Mov     DH, Fila
+                Mov     DL, Columna
+                Mov     BH, 0
+                INT     10h        ; Usa al BIOS
+                Pop     DX         ; Restaura registros
+                Pop     BX
+                Pop     AX
+                ENDM
+
+;----------------------------------------------------------------------------
+; MACRO      : Copia_Buffer
+; PROPOSITO  : Copia una cantidad de bytes especificados entre dos  reas de
+;              memoria determinadas.
+; PARAMETROS : El  rea de memoria que ser  copiada, el  rea de memoria que
+;              recibir  la copia y la cantidad de bytes a copiar.
+; REGRESA    : Nada
+;----------------------------------------------------------------------------
+
+Copia_Buffer    MACRO   De, Hacia, Cantidad
+                Push    SI         ; Guarda registros a ser usados
+                Push    DI
+                Push    CX
+                Mov     SI, OFFSET De  ; La fuente de la informaci¢n
+                Mov     DI, OFFSET Hacia  ; El destino de la misma
+                Mov     CX, Cantidad   ; La cantidad de bytes a copiar
+                REP     MOVSB
+                Pop     CX         ; Restaura registros
+                Pop     DI
+                Pop     SI
+                ENDM
+
+
+;----------------------------------------------------------------------------
+; MACRO      : Obten_Info
+; PROPOSITO  : Lee una cadena de caracteres del teclado.
+; PARAMETROS : El buffer que recibir  la cadena (estructurado como se define a
+;              continuaci¢n) y la cantidad de bytes a leer.
+; REGRESA    : En el byte 2 de la estructura del buffer los bytes REALMENTE
+;              le¡dos y a partir del byte 3 la cadena en s¡.
+; NOTAS      : LA CAPTURA SE BASA EN LA FUNCION 0AH DE LA INT 21H.
+;              DICHA FUNCION ESTABLECE QUE EL REGISTRO AH CONTENGA 0AH Y EL
+;              REGISTRO PAR DS:DX APUNTE A LA DIRECCION DE LA VARIABLE QUE
+;              ALMACENARA LA ESTRUCTURA DEL BUFFER Y ESTE DEBE DE ESTAR
+;              CONSTRUIDO DE LA SIGUIENTE FORMA:
+;
+;              BYTE 1  = CANTIDAD DE BYTES A LEER
+;              BYTE 2  = (LLENADO POR MS-DOS) ES LA CANTIDAD DE BYTES REALMENTE
+;                         LEIDOS.
+;              BYTE 3  = BUFFER DONDE SE ALMACENA EL RESULTADO Y DEBE DE ENCON-
+;                        TRARSE INICIALIZADO A LA MISMA CANTIDAD DE BYTES
+;                        ESPECIFICADOS POR EL BYTE 1.
+;--------------------------------------------------------------------------
+
+Obten_Info      MACRO   BufferEntrada, Cantidad
+                Push    AX         ; Guarda registros
+                Push    DX
+                Mov     DX, OFFSET BufferEntrada
+                Mov     BufferT, Cantidad
+                Mov     AH, 0AH    ; Lee cadena con eco.
+                INT     21H
+                Pop     DX         ; Restaura registros
+                Pop     AX
+                ENDM
+
+;----------------------------------------------------------------------------
+; MACRO      : Compara
+; PROPOSITO  : Compara dos cadenas y determina si son iguales o no.
+; PARAMETROS : Las dos cadenas (cadena1 y cadena2) y la cantidad de bytes
+;              que se desea comparar.
+; REGRESA    : En el registro de banderas, el bit que representa el estatus
+;              de cero. Es decir, la bandera de cero ser  1 si no son iguales.
+;              Se puede checar como : JZ ....
+;----------------------------------------------------------------------------
+
+Compara         MACRO   Cadena1, Cadena2, CantidadBytes
+                Push    SI         ; Guarda registros
+                Push    DI
+                Push    CX
+                Mov     DI, OFFSET Cadena2; Direcci¢n de cadena2
+                Mov     SI, OFFSET Cadena1; Direcci¢n de cadena1
+                REPE    CMPSB      ; Compara las dos cadenas
+                Pop     CX         ; Restaura registros
+                Pop     DI
+                Pop     SI
+                ENDM
+
+;----------------------------------------------------------------------------
+; MACRO      : IniCampo
+; PROPOSITO  : Inicializa un campo con el car cter especificado
+; PARAMETROS : El campo, su longitud y el car cter de inicializaci¢n
+; REGRESA    : Nada
+;----------------------------------------------------------------------------
+
+
+IniCampo        MACRO   Campo, Cuenta, Caracter
+                Push    DI         ; Guarda registros
+                Push    AX
+                Push    CX
+                Mov     CX, Cuenta ; Cantidad de espacios a usar
+                Mov     AL, Caracter   ; Car cter de espacio
+                Mov     DI, OFFSET Campo ; Direcci¢n de campo
+                REP     STOSB      ; Inicializa el campo
+                Pop     CX         ; Restaura registros
+                Pop     AX
+                Pop     DI
+                ENDM
+
+;----------------------------------------------------------------------------
+; MACRO      : Lee_Tecla
+; PROPOSITO  : Lee una tecla del teclado.
+; PARAMETROS : La operaci¢n a realizar. Si es 1 entonces debe de validar
+;              el rango de la tecla pasado en RangoInferior y RangoSuperior
+;              de lo contrario s¢lo espera a que una tecla sea digitada y
+;              regresa.
+; REGRESA    : Funcion contendr  -1 si algo fall¢ de lo contrario la opci¢n
+;              SELECCIONADA.
+;----------------------------------------------------------------------------
+
+Lee_Tecla       MACRO   Operacion, RangoInferior, RangoSuperior
+                LOCAL   Lee_Tecla_0, Lee_Tecla_8, Lee_Tecla_9, Lee_Tecla_10
+                Push    AX         ; Guarda registros
+                Mov     AH, 0      ; Espera a que digiten una tecla
+                INT     16H        ; Invoca al BIOS
+                Cmp     Operacion, 1   ; Valida Rango ?
+                Jnz     Lee_tecla_10   ; Aparentemente s¡.
+                Cmp     AL, RangoInferior  ; Compara rangos
+                Jb      Lee_Tecla_8    ; Fuera de rango
+                Cmp     AL, RangoSuperior
+                Jbe     Lee_Tecla_9    ; Est  en rango
+Lee_Tecla_8:
+                Mov     Operacion, -1  ; Prende bandera del acarreo
+                Jmp     Lee_Tecla_10
+
+Lee_Tecla_9:
+
+                Mov     Funcion, AL
+
+Lee_Tecla_10:
+                Pop     AX
+                ENDM
+
+

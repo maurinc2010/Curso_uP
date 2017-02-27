@@ -1,0 +1,10 @@
+%%HP: T(3)A(R)F(.);
+@ LIMIT, by Bruno Barberi Gnecco <brunobg@geocities.com>
+\<< \-> A B C D
+  \<< A C \.d B C \.d DUP
+    IF C D 2 \->LIST | 0 ==
+    THEN C D LIMIT
+    ELSE / C D 2 \->LIST |
+    END
+  \>>
+\>>

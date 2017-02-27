@@ -1,0 +1,43 @@
+-f 0 40 0                         ;clareo para crear primera matriz
+-d ds:100                             ; para ver que quedo
+-f 0 3 1 2 3 4                ; introduzco valores de la matriz
+-f 10 13 5 6 7 8
+-f 20 23 9 a b c 
+-f 30 33 d e f 11
+-d ds:100
+
+
+16C1:0200 BE0000        MOV     SI,0000
+16C1:0203 BF5000        MOV     DI,0050
+16C1:0206 B80000        MOV     AX,0000
+16C1:0209 BB0400        MOV     BX,0004
+16C1:020C B90400        MOV     CX,0004
+16C1:020F 49            DEC     CX
+16C1:0210 8B04          MOV     AX,[SI]
+16C1:0212 8905          MOV     [DI],AX
+16C1:0214 8B7D10        MOV     DI,[DI+10]-----add di,10
+16C1:0217 46            INC     SI
+16C1:0218 4B            DEC     BX
+16C1:0219 83FB00        CMP     BX,+00
+16C1:021C 75F2          JNZ     0210
+16C1:021E 83F903        CMP     CX,+03
+16C1:0221 740A          JZ      022D  ********232
+16C1:0223 83F902        CMP     CX,+02
+16C1:0226 7410          JZ      0238  *********23d
+16C1:0228 83F901        CMP     CX,+01
+16C1:022B 7416          JZ      0243  ***************248
+16C1:022D 83F900        CMP     CX,+00
+16C1:0230 741E          JZ      0250 ***********253
+16C1:0232 BE1100        MOV     SI,0011
+16C1:0235 BF6200        MOV     DI,0062
+16C1:0238 BB0300        MOV     BX,0003
+16C1:023B EBD2          JMP     020F
+16C1:023D BE2200        MOV     SI,0022
+16C1:0240 BF7300        MOV     DI,0073
+16C1:0243 BB0200        MOV     BX,0002
+16C1:0246 EBC7          JMP     020F
+16C1:0248 BE3300        MOV     SI,0033
+16C1:024B BF8300        MOV     DI,0083
+16C1:024E BB0100        MOV     BX,0001
+16C1:0251 EBBC          JMP     020F
+16C1:0253 CD20          INT     20

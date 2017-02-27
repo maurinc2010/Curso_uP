@@ -1,0 +1,24 @@
+page 60,132
+title primer program asm
+
+pila      segment     para     'stack'
+UNO          db         60    
+HOLA         db         30
+pila         ends      
+
+datos     segment     para     'data'
+DOS          db         60
+ADIOS        db         30
+datos        ends
+
+codigo    segment     para     'code'
+PROCED1      proc       FAR     
+	     assume     ss:pila,ds:datos,cs:codigo
+	     		mov ax,datos
+			mov ds,ax
+			mov ax,4c00h
+			int 21
+PROCED1      endp
+codigo       ends
+	     end  PROCED1			
+

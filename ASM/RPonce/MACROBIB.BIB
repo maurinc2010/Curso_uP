@@ -1,0 +1,54 @@
+;*****************************************************************************
+; Nombre del programa:   MACROBIB.BIB
+; Fecha de creaci¢n  :   Junio 28 de 1993
+; Autor              :   J.A. Rojas Ponce
+; Objetivo           :   Nuestra biblioteca de macros
+;*****************************************************************************
+
+
+Borra_Pantalla  MACRO
+                Mov     AH, 0Fh   ; Obtiene modo de video actual
+                Int     10h
+                Mov     AH, 0     ; Cambia a la modalidad de video obtenida
+                Int     10h
+                ENDM
+
+Despliega_Mens  MACRO   Mensaje
+                Push    AX
+                Push    DX
+                Mov     DX, OFFSET Mensaje
+                Mov     AH, 09h
+                INT     21h
+                Pop     DX
+                Pop     AX
+                ENDM
+
+Pon_Cursor      MACRO   Fila, Columna
+                Push    AX
+                Push    BX
+                Push    DX
+                Mov     AH, 02h
+                Mov     DH, Fila
+                Mov     DL, Columna
+                Mov     BH, 0
+                INT     10h
+                Pop     DX
+                Pop     BX
+                Pop     AX
+                ENDM
+
+Copia_Buffer    MACRO   De, Hacia, Cantidad
+                Push    SI
+                Push    DI
+                Push    CX
+                Mov     SI, OFFSET De + 2
+                Mov     DI, OFFSET Hacia
+                Mov     CX, Cantidad
+                REP     MOVSB
+                Pop     CX
+                Pop     DI
+                Pop     SI
+                ENDM
+
+
+
