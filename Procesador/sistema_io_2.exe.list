@@ -1,0 +1,109 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+sistema_io_2.exe -- emu8086 assembler version: 4.05  
+ 
+[ 28/03/2017  --  01:02:48 p.m. ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       
+[   2]        :                                       .MODEL SMALL
+[   3]        :                                       ;definicion del modelo de memoria a usar
+[   4]        :                                       .STACK                              ;definicion del segmento de pila
+[   5]        :                                       
+[   6]        :                                       .DATA                               ;segmento de datos
+[   7]    0100: 88 01                                 PORT DW 188h
+[   8]    0102: 00 01                                 PA   DW 0100h
+[   9]    0104: 08 01                                 PB   DW 0108h
+[  10]    0106: 80 01                                 PC   DW 0180h
+[  11]    0108: 00 00                                 USO  DW 0000
+[  12]    010A: 00                                    dato       dB  00
+[  13]        :                                       .CODE
+[  14]    0110: C7 06 08 00 90 00                     MOV     USO,0090h
+[  15]    0116: BA 88 01                              MOV     DX,188H
+[  16]    0119: A1 08 00                              mov     AX,USO
+[  17]    011C: EF                                    out     DX,AX
+[  18]        :                                       
+[  19]        :                                       ;mov Ah, 9
+[  20]        :                                       ;int 21h
+[  21]        :                                       
+[  22]    011D:                                       looop:
+[  23]    011D: BA 00 01                              MOV     DX,0100H
+[  24]    0120: EC                                    IN      AL,DX
+[  25]        :                                       
+[  26]    0121: BA 80 01                              MOV     DX,0180H
+[  27]    0124: EE                                    OUT     DX,AL
+[  28]    0125: EB F6                                 JMP     looop
+[  29]        :                                       
+[  30]        :                                       
+[  31]        :                                       
+[  32]        :                                       
+[  33]        :                                       
+[  34]        :                                       
+[  35]        :                                       
+[  36]        :                                       
+[  37]    0127:                                       DELAY1 PROC
+[  38]    0127: B8 10 27                              MOV AX,10000
+[  39]    012A: 8B C8                                 MOV CX,AX
+[  40]    012C:                                       CASSS1:
+[  41]    012C: 49                                    DEC CX
+[  42]    012D: 75 FD                                 JNZ CASSS1
+[  43]    012F: C3                                    ret
+[  44]        :                                       DELAY1 ENDP
+[  45]        :                                       
+[  46]        :                                       
+[  47]        :                                       
+[  48]        :                                       
+[  49]    0130:                                       DELAY PROC
+[  50]    0130: B8 BC 02                              MOV AX,700
+[  51]    0133: 8B C8                                 MOV CX,AX
+[  52]    0135:                                       CASSS:
+[  53]    0135: 49                                    DEC CX
+[  54]    0136: 75 FD                                 JNZ CASSS
+[  55]    0138: C3                                    ret
+[  56]        :                                       DELAY ENDP
+[  57]        :                                       END
+[  58]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 39      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 02      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 00      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 1C      -   check sum (l.byte)
+0013: 6D      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 11      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================

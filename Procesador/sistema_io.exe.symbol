@@ -1,0 +1,22 @@
+< THE SYMBOL TABLE >  sistema_io.exe  --  emu8086 assembler version: 4.05 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+STACK                    	00000     	-5        	SEGMENT   	(ITSELF)  
+DATA                     	00010     	-5        	SEGMENT   	(ITSELF)  
+PORT                     	00000     	2         	VAR       	data      
+PA                       	00002     	2         	VAR       	data      
+PB                       	00004     	2         	VAR       	data      
+PC                       	00006     	2         	VAR       	data      
+USO                      	00008     	2         	VAR       	data      
+DATO                     	0000A     	1         	VAR       	data      
+CODE                     	00011     	-5        	SEGMENT   	(ITSELF)  
+LOOOP                    	0000D     	-1        	LABEL     	code      
+DELAY1                   	00045     	-1        	NEAR      	code      
+CASSS1                   	0004A     	-1        	LABEL     	code      
+DELAY                    	0004E     	-1        	NEAR      	code      
+CASSS                    	00053     	-1        	LABEL     	code      
+===================================================================================================
+[ 28/03/2017  --  12:53:37 p.m. ] 
+< END >
+ 
